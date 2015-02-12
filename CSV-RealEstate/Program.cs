@@ -21,26 +21,31 @@ namespace CSV_RealEstate
             
             //Display the average square footage of a Condo sold in the city of Sacramento, 
             //Use the GetAverageSquareFootageByRealEstateTypeAndCity() function.
-            Console.WriteLine(GetAverageSquareFootageByRealEstateTypeAndCity(realEstateSaleList, RealEstateType.Condo, "Sacramento")); 
-            
+            GetAverageSquareFootageByRealEstateTypeAndCity(realEstateSaleList, RealEstateType.Condo, "Sacramento");             
 
-            //Display the total sales of all residential homes in Elk Grove.  Use the GetTotalSalesByRealEstateTypeAndCity() function for testing.
+            //Display the total sales of all residential homes in Elk Grove. Use the GetTotalSalesByRealEstateTypeAndCity() function for testing.            
+            GetTotalSalesByRealEstateTypeAndCity(realEstateSaleList, RealEstateType.Residential, "Elk Grove");
 
             //Display the total number of residential homes sold in the zip code 95842.  Use the GetNumberOfSalesByRealEstateTypeAndZip() function for testing.
+            GetNumberOfSalesByRealEstateTypeAndZip(realEstateSaleList,RealEstateType.Residential,"95842");
 
             //Display the average sale price of a lot in Sacramento.  Use the GetAverageSalePriceByRealEstateTypeAndCity() function for testing.
+            GetAverageSalePriceByRealEstateTypeAndCity(realEstateSaleList, RealEstateType.Lot, "Sacramento");
 
             //Display the average price per square foot for a condo in Sacramento. Round to 2 decimal places. Use the GetAveragePricePerSquareFootByRealEstateTypeAndCity() function for testing.
+           GetAveragePricePerSquareFootByRealEstateTypeAndCity(realEstateSaleList,RealEstateType.Condo,"Sacramento");
 
             //Display the number of all sales that were completed on a Wednesday.  Use the GetNumberOfSalesByDayOfWeek() function for testing.
-
+           GetNumberOfSalesByDayOfWeek(realEstateSaleList, DayOfWeek.Wednesday);
 
             //Display the average number of bedrooms for a residential home in Sacramento when the 
             // price is greater than 300000.  Round to 2 decimal places.  Use the GetAverageBedsByRealEstateTypeAndCityHigherThanPrice() function for testing.
+           GetAverageBedsByRealEstateTypeAndCityHigherThanPrice(realEstateSaleList, RealEstateType.Residential, "Sacramento", 300000m);
 
             //Extra Credit:
             //Display top 5 cities by the number of homes sold (using the GroupBy extension)
             // Use the GetTop5CitiesByNumberOfHomesSold() function for testing.
+           GetTop5CitiesByNumberOfHomesSold(realEstateSaleList);
 
             Console.ReadKey();
 
@@ -71,46 +76,59 @@ namespace CSV_RealEstate
         //Display the average square footage of a Condo sold in the city of Sacramento
         public static double GetAverageSquareFootageByRealEstateTypeAndCity(List<RealEstateSale> realEstateDataList, RealEstateType realEstateType, string city) 
         {
-            return realEstateDataList.Where(x => x.City.ToLower() == city.ToLower() && x.Type==realEstateType).Average(x => x.Sq_Ft);
+            return (double)realEstateDataList.Where(x => x.City.ToLower() == city.ToLower() && x.Type==realEstateType).Average(x => x.Sq_Ft);
              
         }
 
+        //Display the total sales of all residential homes in Elk Grove.
         public static decimal GetTotalSalesByRealEstateTypeAndCity(List<RealEstateSale> realEstateDataList, RealEstateType realEstateType, string city)
         {
-            return 0.0m;
+            return realEstateDataList.Where(x => x.Type == realEstateType && x.City.ToLower() == city.ToLower()).Sum(x => x.Price);
+           
         }
 
+        //Display the total number of residential homes sold in the zip code 95842
         public static int GetNumberOfSalesByRealEstateTypeAndZip(List<RealEstateSale> realEstateDataList, RealEstateType realEstateType, string zipcode)
         {
-            return 0;
+            return realEstateDataList.Count(x => x.Type == realEstateType && x.Zip == zipcode);
         }
 
-        
+        //Display the average sale price of a lot in Sacramento
         public static decimal GetAverageSalePriceByRealEstateTypeAndCity(List<RealEstateSale> realEstateDataList, RealEstateType realEstateType, string city)
         {
             //Must round to 2 decimal points
-            return 0.0m;
+            return Math.Round(realEstateDataList.Where(x => x.City.ToLower() == city.ToLower() && x.Type == realEstateType).Average(x => x.Price), 2);
         }
+
+        //Display the average price per square foot for a condo in Sacramento. Round to 2 decimal places.
         public static decimal GetAveragePricePerSquareFootByRealEstateTypeAndCity(List<RealEstateSale> realEstateDataList, RealEstateType realEstateType, string city)
         {
-            //Must round to 2 decimal points
-            return 0.0m;
+            return Math.Round(realEstateDataList.Where(x => x.Type == realEstateType && x.City.ToLower() == city.ToLower()).Average(x => (x.Price / x.Sq_Ft)), 2);
         }
 
+        //Display the number of all sales that were completed on a Wednesday
         public static int GetNumberOfSalesByDayOfWeek(List<RealEstateSale> realEstateDataList, DayOfWeek dayOfWeek)
         {
-            return 0;
+            return realEstateDataList.Count(x => x.Sale_Date.DayOfWeek == dayOfWeek);
         }
 
+        //Display the average number of bedrooms for a residential home in Sacramento when the 
+        // price is greater than 300000.  Round to 2 decimal places.
         public static double GetAverageBedsByRealEstateTypeAndCityHigherThanPrice(List<RealEstateSale> realEstateDataList, RealEstateType realEstateType, string city, decimal price)
         {
             //Must round to 2 decimal points
-            return 0.0;
+            return Math.Round((double)realEstateDataList.Where(x => x.City.ToLower() == city.ToLower() && x.Type == realEstateType && x.Price > price).Average(x => x.Beds), 2);
         }
 
+        //Display top 5 cities by the number of homes sold (using the GroupBy extension)
         public static List<string> GetTop5CitiesByNumberOfHomesSold(List<RealEstateSale> realEstateDataList)
         {
-            return new List<string>();
+         //   List<IGrouping<string,RealEstateSale>> groupedList = realEstateDataList.GroupBy(x => x.City).ToList();
+         //   List<IGrouping<string, RealEstateSale>> groupedListOrderedBy = groupedList.OrderByDescending(x => x.Count()).ToList();
+        //    List<IGrouping<string, RealEstateSale>> topFive = groupedListOrderedBy.Take(5).ToList();
+
+            List<IGrouping<string, RealEstateSale>> topFive = realEstateDataList.GroupBy(x => x.City).OrderByDescending(x => x.Count()).Take(5).ToList();
+            return new List<string> { topFive.First().Key, topFive.Skip(1).First().Key, topFive.Skip(2).First().Key, topFive.Skip(3).First().Key, topFive.Skip(4).First().Key };
         }
     }
 
@@ -131,12 +149,12 @@ namespace CSV_RealEstate
         public string State{get;set;}
         public int Beds { get; set; }
         public int Baths { get; set; }
-        public double Sq_Ft { get; set; }
+        public decimal Sq_Ft { get; set; }
         public RealEstateType Type { get; set; }
         public DateTime Sale_Date { get; set; }
-        public double Price { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public decimal Price { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
 
 
         //The constructor will take a single string arguement.  This string will be one line of the real estate data.
@@ -151,7 +169,7 @@ namespace CSV_RealEstate
             this.State = myList[3];
             this.Beds = int.Parse(myList[4]);
             this.Baths = int.Parse(myList[5]);
-            this.Sq_Ft = double.Parse(myList[6], CultureInfo.InvariantCulture.NumberFormat);
+            this.Sq_Ft = decimal.Parse(myList[6]);
 
             //When computing the RealEstateType, if the square footage is 0, then it is of the Lot type, otherwise, use the string
             // value of the "Type" column to determine its corresponding enumeration type.
@@ -170,9 +188,9 @@ namespace CSV_RealEstate
             DateTime dateTime = DateTime.ParseExact(myList[8], format, CultureInfo.InvariantCulture);
             this.Sale_Date = dateTime;
 
-            this.Price = double.Parse(myList[9], CultureInfo.InvariantCulture.NumberFormat);
-            this.Latitude = double.Parse(myList[10], CultureInfo.InvariantCulture.NumberFormat);
-            this.Longitude = double.Parse(myList[11], CultureInfo.InvariantCulture.NumberFormat);
+            this.Price = decimal.Parse(myList[9]);
+            this.Latitude = decimal.Parse(myList[10]);
+            this.Longitude = decimal.Parse(myList[11]);
         }
 
        

@@ -123,10 +123,6 @@ namespace CSV_RealEstate
         //Display top 5 cities by the number of homes sold (using the GroupBy extension)
         public static List<string> GetTop5CitiesByNumberOfHomesSold(List<RealEstateSale> realEstateDataList)
         {
-         //   List<IGrouping<string,RealEstateSale>> groupedList = realEstateDataList.GroupBy(x => x.City).ToList();
-         //   List<IGrouping<string, RealEstateSale>> groupedListOrderedBy = groupedList.OrderByDescending(x => x.Count()).ToList();
-        //    List<IGrouping<string, RealEstateSale>> topFive = groupedListOrderedBy.Take(5).ToList();
-
             List<IGrouping<string, RealEstateSale>> topFive = realEstateDataList.GroupBy(x => x.City).OrderByDescending(x => x.Count()).Take(5).ToList();
             return new List<string> { topFive.First().Key, topFive.Skip(1).First().Key, topFive.Skip(2).First().Key, topFive.Skip(3).First().Key, topFive.Skip(4).First().Key };
         }
